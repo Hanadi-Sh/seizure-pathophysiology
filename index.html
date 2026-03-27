@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pathophysiology of Seizures &amp; Epilepsy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#ffffff;--fg:#1a1a2e;--accent:#2563eb;--accent2:#7c3aed;
+  --excite:#d97706;--inhibit:#2563eb;--warn:#f59e0b;
+  --card:#f8fafc;--border:#e2e8f0;--muted:#64748b;
+  --glow-ex:rgba(217,119,6,.15);--glow-in:rgba(37,99,235,.15);
+}
+html{font-size:16px;scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:'DM Sans',sans-serif;overflow-x:hidden;line-height:1.7}
+
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--accent)}
+.nav-scenes{display:flex;gap:5px}
+.nav-btn{background:none;border:1px solid var(--border);border-radius:20px;padding:7px 16px;font-size:.8rem;font-family:'DM Sans',sans-serif;cursor:pointer;color:var(--muted);transition:all .3s}
+.nav-btn:hover,.nav-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.progress-bar{position:fixed;top:60px;left:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));z-index:101;transition:width .4s ease}
+
+.scene{padding:70px 2rem 3rem;display:none}
+.scene.active{display:block}
+.scene-number{font-family:'JetBrains Mono',monospace;font-size:.8rem;letter-spacing:3px;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem}
+.scene-title{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;margin-bottom:.6rem;line-height:1.25}
+.scene-subtitle{color:var(--muted);font-size:1.05rem;margin-bottom:2rem;max-width:700px}
+
+.canvas-wrap{position:relative;width:100%;max-width:1100px;margin:0 auto 2rem;border-radius:18px;overflow:hidden;background:#fafbfe;border:1px solid var(--border);box-shadow:0 6px 32px rgba(0,0,0,.05)}
+.canvas-wrap canvas{width:100%;display:block}
+
+.diagram-labels{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none}
+.label{position:absolute;background:rgba(255,255,255,.95);backdrop-filter:blur(6px);border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-size:.9rem;font-weight:600;line-height:1.4;box-shadow:0 3px 12px rgba(0,0,0,.07);animation:labelIn .6s ease both}
+.label.excite{border-left:4px solid var(--excite);color:var(--excite)}
+.label.inhibit{border-left:4px solid var(--inhibit);color:var(--inhibit)}
+.label.neutral{border-left:4px solid var(--accent2);color:var(--accent2)}
+@keyframes labelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.narration{max-width:900px;margin:0 auto;padding:2rem 2.5rem;background:var(--card);border-radius:14px;border:1px solid var(--border);font-size:1.02rem;line-height:1.9;color:#334155}
+.narration strong{color:var(--fg);font-weight:600}
+.narration .highlight-ex{color:var(--excite);font-weight:600}
+.narration .highlight-in{color:var(--inhibit);font-weight:600}
+
+.key-points{max-width:900px;margin:1.5rem auto 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.kp{padding:16px 20px;border-radius:12px;font-size:.9rem;font-weight:500;line-height:1.5;border:1px solid var(--border)}
+.kp.ex{background:var(--glow-ex);border-color:rgba(217,119,6,.2);color:#92400e}
+.kp.in{background:var(--glow-in);border-color:rgba(37,99,235,.2);color:#1e40af}
+.kp.nt{background:#f5f3ff;border-color:rgba(124,58,237,.15);color:#5b21b6}
+.kp-icon{font-size:1.2rem;margin-bottom:6px}
+
+#scene1.active{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:100vh;background:linear-gradient(180deg,#f8faff 0%,#fff 50%)}
+#scene1 .hero-title{font-family:'Playfair Display',serif;font-size:3.6rem;font-weight:700;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1.2rem}
+#scene1 .hero-sub{color:var(--muted);font-size:1.2rem;max-width:580px;margin-bottom:2.5rem}
+.start-btn{background:var(--accent);color:#fff;border:none;padding:16px 42px;border-radius:30px;font-size:1.05rem;font-family:'DM Sans',sans-serif;font-weight:600;cursor:pointer;transition:all .3s;box-shadow:0 4px 16px rgba(37,99,235,.25)}
+.start-btn:hover{transform:translateY(-2px);box-shadow:0 6px 24px rgba(37,99,235,.35)}
+.badge{display:inline-block;background:var(--card);border:1px solid var(--border);border-radius:20px;padding:8px 20px;font-size:.82rem;color:var(--muted);margin-bottom:1.5rem}
+
+.split{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:1100px;margin:0 auto 2rem}
+.split-panel{border-radius:16px;overflow:hidden;border:1px solid var(--border);background:#fafbfe;box-shadow:0 3px 16px rgba(0,0,0,.04)}
+.split-panel canvas{width:100%;display:block}
+.panel-header{padding:14px 20px;font-size:.95rem;font-weight:700;text-align:center;letter-spacing:.5px}
+.panel-header.ex{background:linear-gradient(90deg,rgba(217,119,6,.1),rgba(217,119,6,.03));color:var(--excite)}
+.panel-header.in{background:linear-gradient(90deg,rgba(37,99,235,.1),rgba(37,99,235,.03));color:var(--inhibit)}
+
+.controls{display:flex;justify-content:center;gap:14px;margin-top:2rem}
+.ctrl-btn{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 28px;font-size:.92rem;font-family:'DM Sans',sans-serif;font-weight:500;cursor:pointer;transition:all .3s;color:var(--fg)}
+.ctrl-btn:hover{border-color:var(--accent);color:var(--accent)}
+.ctrl-btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.ctrl-btn.primary:hover{background:#1d4ed8}
+
+.scene-footer{max-width:900px;margin:2rem auto 0;padding-top:1.5rem;border-top:1px solid var(--border);font-size:.8rem;color:var(--muted);text-align:center}
+.highlights{max-width:900px;margin:2rem auto 0;padding:2rem 2.5rem;border-radius:14px;background:linear-gradient(135deg,rgba(37,99,235,.04),rgba(124,58,237,.04));border:1px solid rgba(37,99,235,.12)}
+.highlights h3{font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:1rem;color:var(--accent)}
+.highlights ul{list-style:none;display:grid;gap:10px}
+.highlights li{font-size:.92rem;padding-left:1.4rem;position:relative;color:#334155}
+.highlights li::before{content:'▸';position:absolute;left:0;color:var(--accent);font-weight:700}
+
+@media(max-width:768px){
+  .split{grid-template-columns:1fr}
+  #scene1 .hero-title{font-size:2.2rem}
+  .scene-title{font-size:1.7rem}
+  .nav-scenes{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-logo">Neuro · Pathophysiology</div>
+  <div class="nav-scenes">
+    <button class="nav-btn active" onclick="goScene(1)">Title</button>
+    <button class="nav-btn" onclick="goScene(2)">Brain Activity</button>
+    <button class="nav-btn" onclick="goScene(3)">Neurotransmitters</button>
+    <button class="nav-btn" onclick="goScene(4)">PDS &amp; Spread</button>
+    <button class="nav-btn" onclick="goScene(5)">Epileptogenesis</button>
+    <button class="nav-btn" onclick="goScene(6)">Genetics</button>
+  </div>
+</nav>
+<div class="progress-bar" id="progressBar" style="width:16.6%"></div>
+
+<!-- SCENE 1 -->
+<section class="scene active" id="scene1">
+  <div class="badge">Medical Education · Neuroscience</div>
+  <h1 class="hero-title">Pathophysiology of<br>Seizures &amp; Epilepsy</h1>
+  <p class="hero-sub">An interactive visual guide to abnormal cortical electrical activity, neurotransmitter imbalance, neuronal network recruitment, and epileptogenesis.</p>
+  <canvas id="titleCanvas" width="800" height="320"></canvas>
+  <button class="start-btn" onclick="goScene(2)">Begin Presentation →</button>
+  <p style="margin-top:1.5rem;font-size:.82rem;color:var(--muted)">6 Scenes · Interactive Animations · Medical Student Level</p>
+</section>
+
+<!-- SCENE 2 -->
+<section class="scene" id="scene2">
+  <div class="scene-number">Scene 02</div>
+  <h2 class="scene-title">Normal Brain Activity → Seizure</h2>
+  <p class="scene-subtitle">Balanced excitatory and inhibitory neuronal firing maintains normal cerebral function. A seizure represents a sudden electrical disturbance in the cortex.</p>
+  <div class="canvas-wrap">
+    <canvas id="brainCanvas" width="1200" height="700"></canvas>
+    <div class="diagram-labels">
+      <div class="label neutral" style="top:16px;left:20px" id="brainStateLabel">● Normal — Excitatory (orange) &amp; Inhibitory (blue) balanced</div>
+      <div class="label neutral" style="bottom:18px;right:20px">Cerebral cortex — coronal view</div>
+    </div>
+  </div>
+  <div style="display:flex;justify-content:center;gap:14px;margin-bottom:1.5rem">
+    <button class="ctrl-btn" onclick="setBrainState('normal')">Normal State</button>
+    <button class="ctrl-btn primary" onclick="setBrainState('seizure')">Trigger Seizure</button>
+  </div>
+  <div class="narration">
+    <strong>Normal state:</strong> Neurons fire in varied, asynchronous patterns. <span style="color:#b45309;font-weight:600">Excitatory (glutamatergic) neurons</span> (~80%, shown in orange) and <span style="color:#1d6faa;font-weight:600">inhibitory (GABAergic) neurons</span> (~20%, shown in blue) are balanced, allowing organised cortical processing.<br><br>
+    <strong>Seizure onset:</strong> A sudden cortical electrical disturbance causes neurons to fire <span class="highlight-ex">excessively rapidly, rhythmically, and synchronously</span>. Both populations are overwhelmed — all neurons turn orange as hyper-synchronised excitatory activity overrides normal inhibitory control and produces the clinical manifestations of a seizure.
+  </div>
+  <div class="controls">
+    <button class="ctrl-btn" onclick="goScene(1)">← Back</button>
+    <button class="ctrl-btn primary" onclick="goScene(3)">Next: Neurotransmitters →</button>
+  </div>
+</section>
+
+<!-- SCENE 3 -->
+<section class="scene" id="scene3">
+  <div class="scene-number">Scene 03</div>
+  <h2 class="scene-title">Neurotransmitters: Excitation vs Inhibition</h2>
+  <p class="scene-subtitle">The balance between glutamate-mediated excitation and GABA-mediated inhibition is critical. Disruption of this balance underlies seizure generation.</p>
+  <div class="split">
+    <div class="split-panel">
+      <div class="panel-header ex">GLUTAMATE — Excitatory</div>
+      <canvas id="glutCanvas" width="600" height="560"></canvas>
+    </div>
+    <div class="split-panel">
+      <div class="panel-header in">GABA — Inhibitory</div>
+      <canvas id="gabaCanvas" width="600" height="560"></canvas>
+    </div>
+  </div>
+  <div class="narration">
+    <span class="highlight-ex">Glutamate</span> is the principal excitatory neurotransmitter. It binds to NMDA and AMPA receptors, opening <span style="color:#E53E3E;font-weight:600">Na⁺ (red)</span> and <span style="color:#16A34A;font-weight:600">Ca²⁺ (green)</span> channels, causing <strong>depolarisation</strong> and increased neuronal firing.<br><br>
+    <span class="highlight-in">GABA (γ-aminobutyric acid)</span> is the principal inhibitory neurotransmitter. It binds to GABA<sub>A</sub> receptors, opening <span style="color:#0891B2;font-weight:600">Cl⁻ (teal)</span> channels, causing <strong>hyperpolarisation</strong> and reduced excitability.<br><br>
+    <strong>Seizure implication:</strong> Excess excitation <em>or</em> reduced inhibition tips the balance toward seizure activity. Antiseizure medications work by enhancing GABAergic inhibition or reducing glutamatergic excitation.
+  </div>
+  <div class="key-points">
+    <div class="kp ex"><div class="kp-icon">⚡</div>Glutamate → <span style="color:#E53E3E">Na⁺</span> / <span style="color:#16A34A">Ca²⁺</span> influx → depolarisation → increased firing</div>
+    <div class="kp in"><div class="kp-icon">🛡</div>GABA → <span style="color:#0891B2">Cl⁻</span> influx → hyperpolarisation → reduced excitability</div>
+    <div class="kp nt"><div class="kp-icon">💊</div>Antiseizure drugs restore excitation–inhibition balance</div>
+  </div>
+  <div class="controls">
+    <button class="ctrl-btn" onclick="goScene(2)">← Back</button>
+    <button class="ctrl-btn primary" onclick="goScene(4)">Next: Neuronal Mechanisms →</button>
+  </div>
+</section>
+
+<!-- SCENE 4 -->
+<section class="scene" id="scene4">
+  <div class="scene-number">Scene 04</div>
+  <h2 class="scene-title">Paroxysmal Depolarising Shift &amp; Network Spread</h2>
+  <p class="scene-subtitle">Individual neurons undergo prolonged depolarisation (PDS), recruiting neighbouring neurons into a widening abnormal network.</p>
+  <div class="canvas-wrap">
+    <canvas id="pdsCanvas" width="1200" height="680"></canvas>
+    <div class="diagram-labels">
+      <div class="label excite" style="top:18px;left:20px">Paroxysmal Depolarising Shift (PDS)</div>
+      <div class="label neutral" style="top:18px;right:20px">Click anywhere to trigger seizure focus</div>
+    </div>
+  </div>
+  <div class="narration">
+    During a seizure, individual neurons undergo a <span class="highlight-ex">paroxysmal depolarising shift (PDS)</span> — a prolonged, high-amplitude depolarisation with rapid repetitive firing.<br><br>
+    This abnormal electrical activity <strong>spreads to nearby neurons</strong>, recruiting previously normal cells into the abnormal network. The pattern and extent of spread determines the clinical features (e.g., motor, sensory, autonomic manifestations).<br><br>
+    The seizure terminates when <span class="highlight-in">inhibitory mechanisms</span> — including GABAergic surround inhibition and neuronal exhaustion — overcome the excitatory drive.
+  </div>
+  <div class="key-points">
+    <div class="kp ex"><div class="kp-icon">📈</div>PDS: prolonged depolarisation with rapid, repetitive firing</div>
+    <div class="kp nt"><div class="kp-icon">🔗</div>Abnormal activity recruits normal neurons into seizure network</div>
+    <div class="kp in"><div class="kp-icon">⏹</div>Seizure stops when inhibition overcomes excitation</div>
+  </div>
+  <div class="controls">
+    <button class="ctrl-btn" onclick="goScene(3)">← Back</button>
+    <button class="ctrl-btn primary" onclick="goScene(5)">Next: Epileptogenesis →</button>
+  </div>
+</section>
+
+<!-- SCENE 5 -->
+<section class="scene" id="scene5">
+  <div class="scene-number">Scene 05</div>
+  <h2 class="scene-title">Epileptogenesis</h2>
+  <p class="scene-subtitle">The long-term process by which the brain becomes prone to seizures — from initial insult to chronic epilepsy.</p>
+  <div class="canvas-wrap">
+    <canvas id="epCanvas" width="1200" height="620"></canvas>
+    <div class="diagram-labels">
+      <div class="label neutral" style="top:18px;left:20px" id="epPhaseLabel">Step 1: Brain Insult — Excitability Increases</div>
+    </div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:1.5rem">
+    <button class="ctrl-btn" onclick="setEpPhase(0)">1 · Insult</button>
+    <button class="ctrl-btn" onclick="setEpPhase(1)">2 · Network</button>
+    <button class="ctrl-btn" onclick="setEpPhase(2)">3 · Seizures</button>
+    <button class="ctrl-btn" onclick="setEpPhase(3)">4 · Damage</button>
+  </div>
+  <div class="narration">
+    <strong>Step 1 — Initial insult:</strong> After a brain insult (trauma, stroke, infection) or genetic disturbance, neurons gradually become more <span class="highlight-ex">excitable</span> and <span class="highlight-in">inhibitory control</span> may decrease.<br><br>
+    <strong>Step 2 — Network formation:</strong> Abnormal neurons can cause surrounding normal neurons to become hyperexcitable, forming an <span class="highlight-ex">epileptic network</span>.<br><br>
+    <strong>Step 3 — Spontaneous seizures:</strong> Once this network becomes large enough, <span class="highlight-ex">spontaneous seizures</span> occur, leading to epilepsy.<br><br>
+    <strong>Step 4 — Progressive damage:</strong> Repeated seizures may further damage the cortex and increase seizure susceptibility.
+  </div>
+  <div class="controls">
+    <button class="ctrl-btn" onclick="goScene(4)">← Back</button>
+    <button class="ctrl-btn primary" onclick="goScene(6)">Next: Genetic Factors →</button>
+  </div>
+</section>
+
+<!-- SCENE 6 -->
+<section class="scene" id="scene6">
+  <div class="scene-number">Scene 06</div>
+  <h2 class="scene-title">Genetic Factors</h2>
+  <p class="scene-subtitle">Understanding the role of genetics in epilepsy — acquired vs inherited causes.</p>
+  <div class="canvas-wrap">
+    <canvas id="genCanvas" width="1200" height="620"></canvas>
+    <div class="diagram-labels">
+      <div class="label neutral" style="bottom:18px;left:20px">Most patients can be reassured about family risk</div>
+    </div>
+  </div>
+  <div class="narration">
+    <strong>Acquired ≠ inherited:</strong> Epilepsy caused by acquired factors (e.g. head trauma or stroke) is <strong>not inherited</strong>.<br><br>
+    <strong>Inherited epilepsy:</strong> Is more commonly associated with <span class="highlight-ex">generalised-onset seizures</span> and develops during <span class="highlight-in">childhood</span>.<br><br>
+    <strong>Complex inheritance:</strong> Inheritance is usually complex and likely involves <strong>multiple abnormal genes</strong> (polygenic), each contributing a small effect.<br><br>
+    <strong>Reassurance:</strong> Most patients can be reassured that their children and siblings are <strong>unlikely to develop epilepsy</strong>.
+  </div>
+  <div class="highlights">
+    <h3>Key Highlights</h3>
+    <ul>
+      <li>Sudden cortical electrical disturbance initiates seizures</li>
+      <li>Excessively rapid, rhythmic, synchronised neuronal activity</li>
+      <li>Glutamate increases excitation; GABA reduces excitability</li>
+      <li>Paroxysmal depolarising shift drives abnormal firing</li>
+      <li>Brain insult or genetic disturbance increases excitability and decreases inhibition</li>
+      <li>Abnormal neurons recruit normal neighbours into an epileptic network</li>
+      <li>Once the network is large enough, spontaneous seizures occur (epilepsy)</li>
+      <li>Repeated seizures further damage cortex and increase susceptibility</li>
+      <li>Acquired epilepsy is not inherited; inherited forms are generalised and childhood-onset</li>
+      <li>Inheritance is polygenic — most families can be reassured of low risk</li>
+    </ul>
+  </div>
+  <div class="controls">
+    <button class="ctrl-btn" onclick="goScene(5)">← Back</button>
+    <button class="ctrl-btn" onclick="goScene(1)">⟲ Restart</button>
+  </div>
+  <div class="scene-footer">Pathophysiology of Seizures &amp; Epilepsy · For Medical Education · Interactive Presentation</div>
+</section>
+
+<script>
+// Polyfill for roundRect (not supported in all environments)
+if (!CanvasRenderingContext2D.prototype.roundRect) {
+  CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r) {
+    if(typeof r === 'number') r = {tl:r,tr:r,br:r,bl:r};
+    else if(typeof r === 'object') { var d=r; r={tl:d[0]||d,tr:d[0]||d,br:d[0]||d,bl:d[0]||d}; }
+    this.moveTo(x+r.tl,y);
+    this.lineTo(x+w-r.tr,y);this.quadraticCurveTo(x+w,y,x+w,y+r.tr);
+    this.lineTo(x+w,y+h-r.br);this.quadraticCurveTo(x+w,y+h,x+w-r.br,y+h);
+    this.lineTo(x+r.bl,y+h);this.quadraticCurveTo(x,y+h,x,y+h-r.bl);
+    this.lineTo(x,y+r.tl);this.quadraticCurveTo(x,y,x+r.tl,y);
+    this.closePath();
+    return this;
+  };
+}
+
+// Helper: draw filled rounded rect
+function fillRoundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill();}
+function strokeRoundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.stroke();}
+
+// ══════ NAV ══════
+let currentScene=1;
+function goScene(n){
+  document.querySelectorAll('.scene').forEach(s=>s.classList.remove('active'));
+  var target=document.getElementById('scene'+n);
+  if(target) target.classList.add('active');
+  document.querySelectorAll('.nav-btn').forEach((b,i)=>b.classList.toggle('active',i===n-1));
+  document.getElementById('progressBar').style.width=(n/6*100)+'%';
+  currentScene=n;
+  window.scrollTo(0,0);
+  try{
+    if(n===2) initBrainCanvas();
+    if(n===3) initNTCanvases();
+    if(n===4) initPDSCanvas();
+    if(n===5){setEpPhase(0);initEpCanvas();}
+    if(n===6) initGenCanvas();
+  }catch(e){console.error('Canvas init error:',e);}
+}
+
+// ══════ SCENE 1: TITLE ══════
+(function(){
+  const c=document.getElementById('titleCanvas'),ctx=c.getContext('2d'),W=c.width,H=c.height;
+  let t=0;
+  const pts=Array.from({length:80},()=>({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.5,vy:(Math.random()-.5)*.5,r:3+Math.random()*3}));
+  function draw(){
+    ctx.clearRect(0,0,W,H);t+=.01;
+    pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;});
+    ctx.lineWidth=1.5;
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){
+      const d=Math.hypot(pts[i].x-pts[j].x,pts[i].y-pts[j].y);
+      if(d<110){ctx.strokeStyle=`rgba(37,99,235,${.12*(1-d/110)})`;ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.stroke();}
+    }
+    pts.forEach(p=>{
+      const pulse=.5+.5*Math.sin(t*3+p.x*.015);
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r*(1+pulse*.4),0,Math.PI*2);
+      ctx.fillStyle=`rgba(37,99,235,${.25+pulse*.35})`;ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ══════ SCENE 2: BRAIN ══════
+let brainState='normal',brainAnim;
+function setBrainState(s){
+  brainState=s;
+  const lbl=document.getElementById('brainStateLabel');
+  if(s==='normal'){lbl.textContent='● Normal — Excitatory (orange) & Inhibitory (blue) balanced';lbl.className='label neutral';}
+  else{lbl.textContent='⚡ SEIZURE — Hypersynchronous discharge';lbl.className='label excite';}
+}
+
+function initBrainCanvas(){
+  const c=document.getElementById('brainCanvas'),ctx=c.getContext('2d');
+  const W=c.width,H=c.height,CX=W/2,CY=H/2-30,BRX=340,BRY=260;
+  const neurons=[];
+  for(let i=0;i<180;i++){
+    let x,y;
+    do{x=CX+(Math.random()-.5)*BRX*2;y=CY+(Math.random()-.5)*BRY*2;}
+    while(((x-CX)/BRX)**2+((y-CY)/BRY)**2>.85);
+    // ~80% excitatory (glutamate), ~20% inhibitory (GABA) — matches cortical ratio
+    const type=Math.random()<0.8?'ex':'in';
+    neurons.push({x,y,phase:Math.random()*Math.PI*2,freq:.4+Math.random()*2.5,baseR:type==='ex'?4+Math.random()*4:3.5+Math.random()*3,type});
+  }
+  let t=0;
+  if(brainAnim) cancelAnimationFrame(brainAnim);
+
+  function drawBrainShape(){
+    ctx.save();
+    ctx.beginPath();ctx.ellipse(CX+4,CY+4,BRX,BRY,0,0,Math.PI*2);
+    ctx.fillStyle='rgba(0,0,0,.03)';ctx.fill();
+    ctx.beginPath();ctx.ellipse(CX,CY,BRX,BRY,0,0,Math.PI*2);
+    const grad=ctx.createRadialGradient(CX-40,CY-40,50,CX,CY,BRX);
+    grad.addColorStop(0,'#f0f4ff');grad.addColorStop(1,'#e8eeff');
+    ctx.fillStyle=grad;ctx.fill();
+    ctx.strokeStyle='#b0bec5';ctx.lineWidth=2.5;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(CX,CY-BRY);ctx.lineTo(CX,CY+BRY);
+    ctx.strokeStyle='#c8d0da';ctx.lineWidth=2;ctx.stroke();
+    const sulci=[
+      {x:-220,y:-120,cx:-180,cy:-50,ex:-200,ey:40},
+      {x:-120,y:-180,cx:-90,cy:-80,ex:-130,ey:10},
+      {x:-30,y:-200,cx:10,cy:-100,ex:-20,ey:0},
+      {x:80,y:-190,cx:120,cy:-90,ex:80,ey:20},
+      {x:170,y:-150,cx:200,cy:-60,ex:160,ey:50},
+      {x:240,y:-100,cx:260,cy:-20,ex:220,ey:60},
+      {x:-260,y:20,cx:-220,cy:80,ex:-250,ey:140},
+      {x:-160,y:40,cx:-130,cy:110,ex:-170,ey:170},
+      {x:100,y:60,cx:140,cy:130,ex:100,ey:180},
+      {x:210,y:30,cx:240,cy:100,ex:200,ey:160},
+    ];
+    sulci.forEach(s=>{
+      ctx.beginPath();ctx.moveTo(CX+s.x,CY+s.y);
+      ctx.quadraticCurveTo(CX+s.cx,CY+s.cy,CX+s.ex,CY+s.ey);
+      ctx.strokeStyle='rgba(180,194,210,.45)';ctx.lineWidth=1.5;ctx.stroke();
+    });
+    ctx.beginPath();ctx.moveTo(CX-BRX+30,CY+20);
+    ctx.quadraticCurveTo(CX-100,CY-10,CX-20,CY+30);
+    ctx.strokeStyle='rgba(150,170,190,.5)';ctx.lineWidth=2.5;ctx.stroke();
+    ctx.beginPath();ctx.moveTo(CX+BRX-30,CY+20);
+    ctx.quadraticCurveTo(CX+100,CY-10,CX+20,CY+30);
+    ctx.strokeStyle='rgba(150,170,190,.5)';ctx.lineWidth=2.5;ctx.stroke();
+    ctx.font='600 14px DM Sans';ctx.textAlign='center';ctx.fillStyle='rgba(100,116,139,.5)';
+    ctx.fillText('Frontal',CX-140,CY-140);ctx.fillText('Frontal',CX+140,CY-140);
+    ctx.fillText('Parietal',CX-120,CY+10);ctx.fillText('Parietal',CX+120,CY+10);
+    ctx.fillText('Temporal',CX-200,CY+120);ctx.fillText('Temporal',CX+200,CY+120);
+    ctx.restore();
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);t+=.016;
+    drawBrainShape();
+    const isS=brainState==='seizure',sync=isS?.88:0,spd=isS?3.5:1,gp=t*8;
+
+    // Color palettes: Excitatory=warm orange, Inhibitory=cool blue
+    // During seizure all merge to deep orange (hypersynchrony overwhelms inhibition)
+    function nCol(n,fire,alpha){
+      if(isS) return `rgba(200,100,10,${alpha})`;
+      return n.type==='ex'?`rgba(217,130,20,${alpha})`:`rgba(30,120,200,${alpha})`;
+    }
+
+    // Connections — colored by source neuron type
+    ctx.lineWidth=isS?2:1.2;
+    for(let i=0;i<neurons.length;i++)for(let j=i+1;j<neurons.length;j++){
+      const d=Math.hypot(neurons[i].x-neurons[j].x,neurons[i].y-neurons[j].y);
+      if(d<(isS?120:65)){
+        const f=.5+.5*Math.sin((neurons[i].phase*(1-sync)+gp*sync)*spd);
+        const a=isS?.08+f*.18:.04+f*.06;
+        ctx.strokeStyle=nCol(neurons[i],f,a);
+        ctx.beginPath();ctx.moveTo(neurons[i].x,neurons[i].y);ctx.lineTo(neurons[j].x,neurons[j].y);ctx.stroke();
+      }
+    }
+
+    // Neurons
+    neurons.forEach(n=>{
+      n.phase+=.016*n.freq*spd;
+      const lp=n.phase*(1-sync)+gp*sync;
+      const fire=.5+.5*Math.sin(lp);
+      const r=n.baseR*(1+fire*(isS?.7:.25));
+      const isEx=n.type==='ex';
+
+      // Glow
+      if(fire>.8){
+        ctx.beginPath();ctx.arc(n.x,n.y,r*3,0,Math.PI*2);
+        if(isS) ctx.fillStyle=`rgba(200,100,10,${fire*.12})`;
+        else ctx.fillStyle=isEx?`rgba(217,130,20,${fire*.1})`:`rgba(30,120,200,${fire*.1})`;
+        ctx.fill();
+      }
+
+      // Dendrites
+      for(let d=0;d<3;d++){
+        const da=d*2.1+n.phase*.1;
+        ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(n.x+Math.cos(da)*r*2.2,n.y+Math.sin(da)*r*2.2);
+        if(isS) ctx.strokeStyle=`rgba(200,100,10,${.1+fire*.15})`;
+        else ctx.strokeStyle=isEx?`rgba(217,130,20,${.08+fire*.12})`:`rgba(30,120,200,${.08+fire*.12})`;
+        ctx.lineWidth=1;ctx.stroke();
+      }
+
+      // Cell body
+      ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);
+      if(isS) ctx.fillStyle=`rgba(200,100,10,${.35+fire*.65})`;
+      else ctx.fillStyle=isEx?`rgba(217,130,20,${.22+fire*.55})`:`rgba(30,120,200,${.22+fire*.55})`;
+      ctx.fill();
+
+      // Nucleus
+      if(r>5){
+        ctx.beginPath();ctx.arc(n.x,n.y,r*.35,0,Math.PI*2);
+        if(isS) ctx.fillStyle=`rgba(180,90,10,${.3+fire*.4})`;
+        else ctx.fillStyle=isEx?`rgba(180,100,10,${.2+fire*.3})`:`rgba(10,60,150,${.2+fire*.3})`;
+        ctx.fill();
+      }
+    });
+
+    // Legend
+    const lx=W-280,ly=50;
+    ctx.fillStyle='rgba(255,255,255,.88)';ctx.fillRect(lx-12,ly-18,260,isS?48:72);
+    ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;ctx.strokeRect(lx-12,ly-18,260,isS?48:72);
+    ctx.font='600 13px DM Sans';ctx.textAlign='left';
+    if(isS){
+      ctx.fillStyle='rgba(200,100,10,.8)';ctx.beginPath();ctx.arc(lx,ly,7,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#d97706';ctx.fillText('All neurons — hypersynchronised',lx+16,ly+5);
+    } else {
+      ctx.fillStyle='rgba(220,120,20,.7)';ctx.beginPath();ctx.arc(lx,ly,7,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#b45309';ctx.fillText('Excitatory (Glutamate) ~80%',lx+16,ly+5);
+      ctx.fillStyle='rgba(30,120,200,.7)';ctx.beginPath();ctx.arc(lx,ly+26,7,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#1d6faa';ctx.fillText('Inhibitory (GABA) ~20%',lx+16,ly+31);
+    }
+    const ey=H-70,eH=80;
+    ctx.fillStyle='rgba(248,250,252,.85)';ctx.fillRect(60,ey-eH/2-10,W-120,eH+20);
+    ctx.strokeStyle='#cbd5e1';ctx.lineWidth=1;ctx.strokeRect(60,ey-eH/2-10,W-120,eH+20);
+    ctx.font='bold 14px JetBrains Mono';ctx.fillStyle='#64748b';ctx.textAlign='left';ctx.fillText('EEG Trace',80,ey-eH/2+6);
+    ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(80,ey);ctx.lineTo(W-80,ey);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(100,ey);ctx.strokeStyle=isS?'#d97706':'#2563eb';ctx.lineWidth=2.5;
+    for(let x=100;x<W-80;x+=2){
+      const noise=isS?Math.sin(x*.12+t*14)*35+Math.sin(x*.23+t*20)*10
+        :(Math.sin(x*.06+t*2.5)*5+Math.sin(x*.11+t*4)*4+Math.random()*4-2);
+      ctx.lineTo(x,ey+noise);
+    }
+    ctx.stroke();
+    ctx.font='500 12px DM Sans';ctx.textAlign='right';ctx.fillStyle=isS?'#d97706':'#2563eb';
+    ctx.fillText(isS?'High amplitude, rhythmic, synchronised':'Low amplitude, desynchronised',W-90,ey-eH/2+6);
+    brainAnim=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ══════ SCENE 3: NT ══════
+let ntAnim;
+function initNTCanvases(){
+  if(ntAnim) cancelAnimationFrame(ntAnim);
+  const cG=document.getElementById('glutCanvas'),cB=document.getElementById('gabaCanvas');
+  const gCtx=cG.getContext('2d'),bCtx=cB.getContext('2d');
+  const W=600,H=560;
+  let t=0;
+
+  // ──── ION COLOURS ────
+  // Na⁺  = Red (#E53E3E)       — classic electrophysiology red for sodium
+  // Ca²⁺ = Green (#16A34A)     — distinct green for calcium
+  // Cl⁻  = Teal (#0891B2)      — cool cyan-teal for chloride
+  const ION_NA  = {fill:'#E53E3E', glow:'rgba(229,62,62,', label:'Na\u207A',  r:5};
+  const ION_CA  = {fill:'#16A34A', glow:'rgba(22,163,74,',  label:'Ca\u00B2\u207A', r:5};
+  const ION_CL  = {fill:'#0891B2', glow:'rgba(8,145,178,',  label:'Cl\u207B',  r:5};
+
+  function drawSynapse(ctx,type){
+    ctx.clearRect(0,0,W,H);t+=.003;
+    const isEx=type==='glut';
+    const col=isEx?'#d97706':'#2563eb';
+    const colL=isEx?'#fef3c7':'#bfdbfe';
+    const colD=isEx?'#92400e':'#1e40af';
+
+    // ═══ PRE-SYNAPTIC TERMINAL ═══
+    ctx.fillStyle='#f1f5f9';ctx.beginPath();ctx.roundRect(70,30,260,125,16);ctx.fill();
+    ctx.strokeStyle='#b0bec5';ctx.lineWidth=2;ctx.stroke();
+    ctx.font='700 13px DM Sans';ctx.fillStyle='#475569';ctx.textAlign='center';ctx.fillText('Pre-synaptic terminal',200,24);
+
+    // ── Voltage-gated Ca²⁺ channels on presynaptic membrane (at bottom edge) ──
+    // Two VGCC channels on the presynaptic membrane
+    const vgccPositions=[{x:105,label:'VGCC'},{x:295,label:'VGCC'}];
+    vgccPositions.forEach((vg,vi)=>{
+      const chanTop=130, chanBot=158, chanW=22;
+      const vgOpen=(.5+.5*Math.sin(t*3.5+vi*2))>.3;
+
+      // Channel structure
+      ctx.fillStyle='#DCFCE7';
+      ctx.beginPath();ctx.roundRect(vg.x-chanW/2,chanTop,chanW,chanBot-chanTop,3);ctx.fill();
+      ctx.strokeStyle=ION_CA.fill;ctx.lineWidth=1.5;ctx.stroke();
+      // Walls
+      ctx.fillStyle=ION_CA.fill;ctx.globalAlpha=.5;
+      ctx.fillRect(vg.x-chanW/2, chanTop, 4, chanBot-chanTop);
+      ctx.fillRect(vg.x+chanW/2-4, chanTop, 4, chanBot-chanTop);
+      ctx.globalAlpha=1;
+
+      if(vgOpen){
+        ctx.fillStyle='rgba(255,255,255,.5)';
+        ctx.fillRect(vg.x-4, chanTop+4, 8, chanBot-chanTop-8);
+      } else {
+        ctx.fillStyle=ION_CA.fill;ctx.globalAlpha=.3;
+        ctx.fillRect(vg.x-3, chanTop+5, 6, chanBot-chanTop-10);
+        ctx.globalAlpha=1;
+      }
+
+      // Ca²⁺ ions flowing INTO presynaptic terminal (upward, from outside into terminal)
+      if(vgOpen){
+        for(let p=0;p<2;p++){
+          const progress=((t*1.5+vi*0.5+p*0.5)%1);
+          // Ions flow upward (from cleft side into terminal)
+          const iy=chanBot - progress*(chanBot-chanTop+15);
+          const ix=vg.x + Math.sin(t*4+p*3)*1.5;
+          const alpha=progress<0.1?progress*10:progress>0.8?(1-progress)*5:0.8;
+
+          ctx.beginPath();ctx.arc(ix,iy,ION_CA.r,0,Math.PI*2);
+          ctx.fillStyle=ION_CA.glow+alpha+')';ctx.fill();
+          if(p===0 && progress>0.3 && progress<0.7){
+            ctx.font='bold 6px JetBrains Mono';ctx.fillStyle='#fff';ctx.textAlign='center';
+            ctx.fillText('Ca\u00B2\u207A',ix,iy+2.5);
+          }
+        }
+      }
+
+      // Label
+      ctx.font='bold 7px JetBrains Mono';ctx.fillStyle=ION_CA.fill;ctx.textAlign='center';
+      ctx.fillText(vg.label,vg.x,chanTop-3);
+    });
+
+    // ── Ca²⁺ inside presynaptic terminal (already entered, triggering vesicle fusion) ──
+    const caInsideCount=3;
+    for(let c=0;c<caInsideCount;c++){
+      const caPulse=Math.sin(t*3+c*2);
+      if(caPulse>0){
+        const cx2=140+c*60, cy2=100+Math.sin(t*2+c)*8;
+        ctx.beginPath();ctx.arc(cx2,cy2,ION_CA.r,0,Math.PI*2);
+        ctx.fillStyle=ION_CA.glow+(0.3+caPulse*0.4)+')';ctx.fill();
+        // Small arrow pointing toward nearest vesicle
+        ctx.fillStyle=ION_CA.glow+'0.3)';
+        ctx.beginPath();ctx.moveTo(cx2,cy2+6);ctx.lineTo(cx2-3,cy2+3);ctx.lineTo(cx2+3,cy2+3);ctx.fill();
+      }
+    }
+
+    // Ca²⁺ trigger label inside terminal
+    ctx.font='500 9px DM Sans';ctx.fillStyle='#16A34A';ctx.textAlign='center';
+    ctx.fillText('Ca\u00B2\u207A triggers vesicle fusion',200,42);
+
+    // ── Vesicles with neurotransmitter ──
+    for(let i=0;i<8;i++){
+      const vx=110+i%4*50,vy=55+(i<4?0:38);
+      const release=Math.max(0,Math.sin(t*2.5+i*.7));
+      const yShift=release*70;
+      ctx.beginPath();ctx.arc(vx,vy+yShift+Math.sin(t*3+i)*3,10,0,Math.PI*2);
+      ctx.fillStyle=col;ctx.globalAlpha=.45+release*.55;ctx.fill();ctx.globalAlpha=1;
+      ctx.strokeStyle=colD;ctx.lineWidth=1.3;ctx.stroke();
+      if(i<2){ctx.font='bold 8px JetBrains Mono';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(isEx?'Glu':'GABA',vx,vy+yShift+3);}
+    }
+
+    // Release arrow
+    ctx.fillStyle=col;ctx.globalAlpha=.4;ctx.beginPath();ctx.moveTo(200,152);ctx.lineTo(208,166);ctx.lineTo(192,166);ctx.fill();ctx.globalAlpha=1;
+
+    // ═══ SYNAPTIC CLEFT ═══
+    ctx.fillStyle='rgba(250,251,254,.5)';ctx.fillRect(50,168,310,52);
+    ctx.strokeStyle='#cbd5e1';ctx.setLineDash([6,4]);ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(50,168);ctx.lineTo(360,168);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(50,220);ctx.lineTo(360,220);ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.font='600 11px JetBrains Mono';ctx.fillStyle='#94a3b8';ctx.textAlign='center';ctx.fillText('SYNAPTIC CLEFT (extracellular)',205,196);
+
+    // ── Free neurotransmitter molecules drifting in cleft ──
+    for(let i=0;i<8;i++){
+      const mx=80+i*32+Math.sin(t*3+i*1.1)*8,my=178+Math.sin(t*2.5+i*1.4)*12;
+      ctx.beginPath();ctx.arc(mx,my,4,0,Math.PI*2);
+      ctx.fillStyle=col;ctx.globalAlpha=.2+.25*Math.abs(Math.sin(t*3+i));ctx.fill();ctx.globalAlpha=1;
+    }
+
+    // ── EXTRACELLULAR IONS floating in cleft — ALL 3 ions present on BOTH sides ──
+    const ionR=ION_NA.r;  // same size for all
+    // Na⁺ ions (red)
+    for(let i=0;i<3;i++){
+      const ix=68+i*38+Math.sin(t*2+i*1.7)*8;
+      const iy=204+Math.sin(t*1.8+i*2.3)*5;
+      ctx.beginPath();ctx.arc(ix,iy,ionR,0,Math.PI*2);
+      ctx.fillStyle=ION_NA.glow+'0.5)';ctx.fill();
+      if(i===0){ctx.font='bold 6px JetBrains Mono';ctx.fillStyle=ION_NA.fill;ctx.textAlign='center';ctx.fillText('Na\u207A',ix,iy-8);}
+    }
+    // Ca²⁺ ions (green)
+    for(let i=0;i<3;i++){
+      const ix=190+i*38+Math.sin(t*1.8+i*2.1)*8;
+      const iy=205+Math.sin(t*2.2+i*1.9)*5;
+      ctx.beginPath();ctx.arc(ix,iy,ionR,0,Math.PI*2);
+      ctx.fillStyle=ION_CA.glow+'0.5)';ctx.fill();
+      if(i===0){ctx.font='bold 6px JetBrains Mono';ctx.fillStyle=ION_CA.fill;ctx.textAlign='center';ctx.fillText('Ca\u00B2\u207A',ix,iy-8);}
+    }
+    // Cl⁻ ions (teal)
+    for(let i=0;i<3;i++){
+      const ix=310+i*28+Math.sin(t*2.1+i*1.5)*8;
+      const iy=204+Math.sin(t*1.9+i*2)*5;
+      ctx.beginPath();ctx.arc(ix,iy,ionR,0,Math.PI*2);
+      ctx.fillStyle=ION_CL.glow+'0.5)';ctx.fill();
+      if(i===0){ctx.font='bold 6px JetBrains Mono';ctx.fillStyle=ION_CL.fill;ctx.textAlign='center';ctx.fillText('Cl\u207B',ix,iy-8);}
+    }
+
+    // ═══ POST-SYNAPTIC MEMBRANE WITH RECEPTOR-CHANNELS ═══
+    // Thick membrane band
+    ctx.fillStyle='#e8ecf1';ctx.fillRect(50,220,300,10);
+    ctx.strokeStyle='#9ca3af';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(50,220);ctx.lineTo(350,220);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(50,230);ctx.lineTo(350,230);ctx.stroke();
+
+    // Label
+    ctx.font='600 11px DM Sans';ctx.fillStyle='#64748b';ctx.textAlign='center';ctx.fillText('Post-synaptic membrane',200,218);
+
+    if(isEx){
+      // ──── GLUTAMATE SIDE: 2 NMDA + 2 AMPA receptors ────
+      const receptors=[
+        {x:100, label:'NMDA', ions:['Na','Ca'], color:'#B91C1C', bg:'#FEE2E2'},
+        {x:170, label:'AMPA', ions:['Na'],      color:'#C2410C', bg:'#FFEDD5'},
+        {x:240, label:'NMDA', ions:['Na','Ca'], color:'#B91C1C', bg:'#FEE2E2'},
+        {x:310, label:'AMPA', ions:['Na'],      color:'#C2410C', bg:'#FFEDD5'},
+      ];
+      receptors.forEach((rec,ri)=>{
+        const open=(.5+.5*Math.sin(t*4+ri*1.8))>.35;
+        const chanTop=222, chanBot=270, chanW=28;
+
+        // Channel body (transmembrane)
+        ctx.fillStyle=rec.bg;
+        ctx.beginPath();ctx.roundRect(rec.x-chanW/2,chanTop,chanW,chanBot-chanTop,4);ctx.fill();
+        ctx.strokeStyle=rec.color;ctx.lineWidth=1.8;ctx.stroke();
+
+        // Left & right subunits (thick walls)
+        ctx.fillStyle=rec.color;ctx.globalAlpha=.7;
+        ctx.fillRect(rec.x-chanW/2, chanTop, 5, chanBot-chanTop);
+        ctx.fillRect(rec.x+chanW/2-5, chanTop, 5, chanBot-chanTop);
+        ctx.globalAlpha=1;
+
+        // Pore — open or closed gate
+        if(open){
+          // Open pore (gap in middle)
+          ctx.fillStyle='rgba(255,255,255,.6)';
+          ctx.fillRect(rec.x-6, chanTop+8, 12, chanBot-chanTop-16);
+          // Gate indicators (small wedges pulled apart)
+          ctx.fillStyle=rec.color;ctx.globalAlpha=.5;
+          ctx.fillRect(rec.x-chanW/2+5, chanTop+20, 3, 6);
+          ctx.fillRect(rec.x+chanW/2-8, chanTop+20, 3, 6);
+          ctx.globalAlpha=1;
+        } else {
+          // Closed pore (gate blocks middle)
+          ctx.fillStyle=rec.color;ctx.globalAlpha=.35;
+          ctx.fillRect(rec.x-4, chanTop+10, 8, chanBot-chanTop-20);
+          ctx.globalAlpha=1;
+        }
+
+        // Receptor label on top
+        ctx.font='bold 9px JetBrains Mono';ctx.fillStyle=rec.color;ctx.textAlign='center';
+        ctx.fillText(rec.label,rec.x,chanTop-2);
+
+        // ──── ION INFLUX (flowing downward through channel when open) ────
+        if(open){
+          rec.ions.forEach((ionType,ii)=>{
+            const ion = ionType==='Na' ? ION_NA : ION_CA;
+            // Multiple ions streaming DOWN through the pore
+            for(let p=0;p<3;p++){
+              const progress=((t*1.8+ri*0.4+p*0.33+ii*0.15)%1); // 0→1 top to bottom
+              const iy=chanTop + progress*(chanBot-chanTop+40) - 5;
+              const ix=rec.x + (ii===0?-3:3) + Math.sin(t*6+p*2+ri)*2;
+              const alpha= progress<0.05?progress*20 : progress>0.85?(1-progress)*6.6 : 0.85;
+
+              // Ion glow
+              ctx.beginPath();ctx.arc(ix,iy,ion.r+3,0,Math.PI*2);
+              ctx.fillStyle=ion.glow+(alpha*0.25)+')';ctx.fill();
+              // Ion body
+              ctx.beginPath();ctx.arc(ix,iy,ion.r,0,Math.PI*2);
+              ctx.fillStyle=ion.glow+alpha+')';ctx.fill();
+              // Ion symbol
+              if(p===0 && progress>0.2 && progress<0.6){
+                ctx.font='bold 7px JetBrains Mono';ctx.fillStyle='#fff';ctx.textAlign='center';
+                ctx.fillText(ion.label,ix,iy+3);
+              }
+            }
+          });
+          // Down-arrow below channel
+          ctx.fillStyle=rec.color;ctx.globalAlpha=.6;
+          ctx.beginPath();ctx.moveTo(rec.x,chanBot+8);ctx.lineTo(rec.x-5,chanBot+2);ctx.lineTo(rec.x+5,chanBot+2);ctx.fill();
+          ctx.globalAlpha=1;
+        }
+      });
+
+      // ──── ION COLOUR LEGEND ────
+      const legY=282;
+      ctx.font='bold 10px DM Sans';ctx.textAlign='left';
+      // Na⁺
+      ctx.beginPath();ctx.arc(60,legY,ION_NA.r,0,Math.PI*2);ctx.fillStyle=ION_NA.fill;ctx.fill();
+      ctx.fillStyle=ION_NA.fill;ctx.fillText('Na\u207A',73,legY+4);
+      // Ca²⁺
+      ctx.beginPath();ctx.arc(125,legY,ION_CA.r,0,Math.PI*2);ctx.fillStyle=ION_CA.fill;ctx.fill();
+      ctx.fillStyle=ION_CA.fill;ctx.fillText('Ca\u00B2\u207A',138,legY+4);
+      // Cl⁻
+      ctx.beginPath();ctx.arc(200,legY,ION_CL.r,0,Math.PI*2);ctx.fillStyle=ION_CL.fill;ctx.fill();
+      ctx.fillStyle=ION_CL.fill;ctx.fillText('Cl\u207B',213,legY+4);
+
+      // Presynaptic Ca²⁺ note
+      ctx.font='italic 9px DM Sans';ctx.fillStyle='#16A34A';ctx.textAlign='left';
+      ctx.fillText('Ca\u00B2\u207A enters presynaptically via VGCC \u2192 triggers vesicle release',60,legY+18);
+
+      // Result label
+      ctx.font='bold 14px DM Sans';ctx.textAlign='center';ctx.fillStyle='#d97706';
+      ctx.fillText('Na\u207A + Ca\u00B2\u207A  influx (postsynaptic)  \u2192  DEPOLARISATION',205,legY+38);
+      ctx.font='500 11px DM Sans';ctx.fillStyle='#78716c';
+      ctx.fillText('Positive ions enter cell \u2192 membrane potential rises toward 0 mV',205,legY+54);
+
+    } else {
+      // ──── GABA SIDE: 4 GABA-A receptor-channels ────
+      const receptors=[
+        {x:100, label:'GABA\u2090'},
+        {x:170, label:'GABA\u2090'},
+        {x:240, label:'GABA\u2090'},
+        {x:310, label:'GABA\u2090'},
+      ];
+      receptors.forEach((rec,ri)=>{
+        const open=(.5+.5*Math.sin(t*4+ri*1.8))>.35;
+        const chanTop=222, chanBot=270, chanW=28;
+
+        // Channel body
+        ctx.fillStyle='#CFFAFE';
+        ctx.beginPath();ctx.roundRect(rec.x-chanW/2,chanTop,chanW,chanBot-chanTop,4);ctx.fill();
+        ctx.strokeStyle='#0891B2';ctx.lineWidth=1.8;ctx.stroke();
+
+        // Subunit walls
+        ctx.fillStyle='#0891B2';ctx.globalAlpha=.6;
+        ctx.fillRect(rec.x-chanW/2, chanTop, 5, chanBot-chanTop);
+        ctx.fillRect(rec.x+chanW/2-5, chanTop, 5, chanBot-chanTop);
+        ctx.globalAlpha=1;
+
+        if(open){
+          ctx.fillStyle='rgba(255,255,255,.6)';
+          ctx.fillRect(rec.x-6, chanTop+8, 12, chanBot-chanTop-16);
+          ctx.fillStyle='#0891B2';ctx.globalAlpha=.5;
+          ctx.fillRect(rec.x-chanW/2+5, chanTop+20, 3, 6);
+          ctx.fillRect(rec.x+chanW/2-8, chanTop+20, 3, 6);
+          ctx.globalAlpha=1;
+        } else {
+          ctx.fillStyle='#0891B2';ctx.globalAlpha=.35;
+          ctx.fillRect(rec.x-4, chanTop+10, 8, chanBot-chanTop-20);
+          ctx.globalAlpha=1;
+        }
+
+        // Receptor label
+        ctx.font='bold 9px JetBrains Mono';ctx.fillStyle='#0891B2';ctx.textAlign='center';
+        ctx.fillText(rec.label,rec.x,chanTop-2);
+
+        // ──── Cl⁻ INFLUX ────
+        if(open){
+          const ion=ION_CL;
+          for(let p=0;p<3;p++){
+            const progress=((t*1.8+ri*0.4+p*0.33)%1);
+            const iy=chanTop + progress*(chanBot-chanTop+40) - 5;
+            const ix=rec.x + Math.sin(t*5+p*2+ri)*2.5;
+            const alpha= progress<0.05?progress*20 : progress>0.85?(1-progress)*6.6 : 0.85;
+
+            ctx.beginPath();ctx.arc(ix,iy,ion.r+3,0,Math.PI*2);
+            ctx.fillStyle=ion.glow+(alpha*0.25)+')';ctx.fill();
+            ctx.beginPath();ctx.arc(ix,iy,ion.r,0,Math.PI*2);
+            ctx.fillStyle=ion.glow+alpha+')';ctx.fill();
+            if(p===0 && progress>0.2 && progress<0.6){
+              ctx.font='bold 7px JetBrains Mono';ctx.fillStyle='#fff';ctx.textAlign='center';
+              ctx.fillText(ion.label,ix,iy+3);
+            }
+          }
+          ctx.fillStyle='#0891B2';ctx.globalAlpha=.6;
+          ctx.beginPath();ctx.moveTo(rec.x,chanBot+8);ctx.lineTo(rec.x-5,chanBot+2);ctx.lineTo(rec.x+5,chanBot+2);ctx.fill();
+          ctx.globalAlpha=1;
+        }
+      });
+
+      // Ion legend — all 3 ions shown (same as glutamate side)
+      const legY=282;
+      ctx.font='bold 10px DM Sans';ctx.textAlign='left';
+      // Na⁺
+      ctx.beginPath();ctx.arc(60,legY,ION_NA.r,0,Math.PI*2);ctx.fillStyle=ION_NA.fill;ctx.fill();
+      ctx.fillStyle=ION_NA.fill;ctx.fillText('Na\u207A',73,legY+4);
+      // Ca²⁺
+      ctx.beginPath();ctx.arc(125,legY,ION_CA.r,0,Math.PI*2);ctx.fillStyle=ION_CA.fill;ctx.fill();
+      ctx.fillStyle=ION_CA.fill;ctx.fillText('Ca\u00B2\u207A',138,legY+4);
+      // Cl⁻
+      ctx.beginPath();ctx.arc(200,legY,ION_CL.r,0,Math.PI*2);ctx.fillStyle=ION_CL.fill;ctx.fill();
+      ctx.fillStyle=ION_CL.fill;ctx.fillText('Cl\u207B',213,legY+4);
+
+      // Presynaptic Ca²⁺ note
+      ctx.font='italic 9px DM Sans';ctx.fillStyle='#16A34A';ctx.textAlign='left';
+      ctx.fillText('Ca\u00B2\u207A enters presynaptically via VGCC \u2192 triggers vesicle release',60,legY+18);
+
+      ctx.font='bold 14px DM Sans';ctx.textAlign='center';ctx.fillStyle='#0891B2';
+      ctx.fillText('Cl\u207B  influx (postsynaptic)  \u2192  HYPERPOLARISATION',200,legY+38);
+      ctx.font='500 11px DM Sans';ctx.fillStyle='#78716c';
+      ctx.fillText('Negative ions enter cell \u2192 membrane potential drops below \u221270 mV',200,legY+54);
+    }
+
+    // ═══ INTRACELLULAR SPACE LABEL ═══
+    ctx.font='600 11px DM Sans';ctx.fillStyle='#94a3b8';ctx.textAlign='center';
+    ctx.fillText('Intracellular',200,360);
+
+    // ═══ MEMBRANE POTENTIAL TRACE ═══
+    const trY=445,trH=55;
+    ctx.fillStyle='rgba(248,250,252,.9)';ctx.beginPath();ctx.roundRect(40,trY-trH/2-18,W-80,trH+36,10);ctx.fill();
+    ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;ctx.strokeRect(40,trY-trH/2-18,W-80,trH+36);
+    // Baseline
+    ctx.strokeStyle='#cbd5e1';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(70,trY);ctx.lineTo(W-50,trY);ctx.stroke();
+    // Labels
+    ctx.font='600 11px JetBrains Mono';ctx.fillStyle='#94a3b8';ctx.textAlign='left';ctx.fillText('Vm',50,trY-trH/2-4);
+    ctx.font='500 9px JetBrains Mono';ctx.fillText('\u221270 mV',50,trY+4);
+    // Threshold line for excitatory
+    if(isEx){
+      ctx.strokeStyle='rgba(229,62,62,.25)';ctx.setLineDash([4,4]);ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(70,trY-25);ctx.lineTo(W-50,trY-25);ctx.stroke();ctx.setLineDash([]);
+      ctx.font='500 8px JetBrains Mono';ctx.fillStyle='rgba(229,62,62,.5)';ctx.textAlign='right';ctx.fillText('Threshold \u221255 mV',W-55,trY-28);
+    }
+
+    // Trace
+    ctx.beginPath();ctx.moveTo(90,trY);
+    const trCol=isEx?'#d97706':'#0891B2';
+    ctx.strokeStyle=trCol;ctx.lineWidth=2.5;
+    for(let x=90;x<W-50;x+=2){
+      let v;
+      if(isEx){const spike=Math.max(0,Math.sin((x-180)*.025+t*3))*35;v=trY-spike-Math.random()*1;}
+      else{const dip=Math.max(0,Math.sin((x-180)*.025+t*3))*20;v=trY+dip+Math.random()*1;}
+      ctx.lineTo(x,v);
+    }
+    ctx.stroke();
+
+    // Trace result
+    ctx.font='bold 12px DM Sans';ctx.textAlign='center';ctx.fillStyle=trCol;
+    if(isEx) ctx.fillText('\u2191 Depolarisation \u2192 Increased neuronal firing',W/2,trY+trH/2+12);
+    else ctx.fillText('\u2193 Hyperpolarisation \u2192 Reduced excitability',W/2,trY+trH/2+12);
+
+    // ASM note
+    ctx.font='italic 11px DM Sans';ctx.fillStyle='#64748b';ctx.textAlign='center';
+    ctx.fillText(isEx?'ASMs reduce glutamatergic activity (e.g. block Na\u207A/Ca\u00B2\u207A channels)':'ASMs enhance GABAergic inhibition (e.g. benzodiazepines, valproate)',W/2,H-8);
+  }
+
+  function loop(){drawSynapse(gCtx,'glut');drawSynapse(bCtx,'gaba');ntAnim=requestAnimationFrame(loop);}
+  loop();
+}
+
+// ══════ SCENE 4: PDS ══════
+let pdsAnim;
+function initPDSCanvas(){
+  if(pdsAnim) cancelAnimationFrame(pdsAnim);
+  const c=document.getElementById('pdsCanvas'),ctx=c.getContext('2d'),W=c.width,H=c.height;
+  let t=0;
+  const nodes=[];
+  for(let i=0;i<100;i++){
+    nodes.push({x:120+Math.random()*(W-240),y:80+Math.random()*(H-260),state:'normal',activateTime:Infinity,
+      r:6+Math.random()*5,connections:[],dendrites:[]});
+    for(let d=0;d<4;d++) nodes[i].dendrites.push(Math.random()*Math.PI*2);
+  }
+  for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
+    if(Math.hypot(nodes[i].x-nodes[j].x,nodes[i].y-nodes[j].y)<120){nodes[i].connections.push(j);nodes[j].connections.push(i);}
+  }
+  nodes[50].state='seizure';nodes[50].activateTime=0;
+
+  c.onclick=function(e){
+    const rect=c.getBoundingClientRect();
+    const mx=(e.clientX-rect.left)*(W/rect.width),my=(e.clientY-rect.top)*(H/rect.height);
+    let cl=0,md=Infinity;
+    nodes.forEach((n,i)=>{const d=Math.hypot(n.x-mx,n.y-my);if(d<md){md=d;cl=i;}});
+    nodes.forEach(n=>{n.state='normal';n.activateTime=Infinity;});
+    nodes[cl].state='seizure';nodes[cl].activateTime=t;
+  };
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);t+=.016;
+    nodes.forEach(n=>{if(n.state==='seizure'&&t-n.activateTime>.6){
+      n.connections.forEach(j=>{if(nodes[j].state==='normal'&&Math.random()<.006){nodes[j].state='seizure';nodes[j].activateTime=t;}});}});
+    nodes.forEach((n,i)=>{n.connections.forEach(j=>{if(j<=i)return;const m=nodes[j],both=n.state==='seizure'&&m.state==='seizure';
+      ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);
+      ctx.strokeStyle=both?`rgba(200,100,10,${.12+.2*Math.sin(t*10)})`:'rgba(148,163,184,.07)';ctx.lineWidth=both?2.5:1.2;ctx.stroke();});});
+    nodes.forEach(n=>{
+      const isS=n.state==='seizure',fire=.5+.5*Math.sin(t*10+n.x*.04);
+      n.dendrites.forEach(da=>{ctx.beginPath();ctx.moveTo(n.x,n.y);const dl=n.r*(isS?3.5:2.5);
+        ctx.lineTo(n.x+Math.cos(da)*dl,n.y+Math.sin(da)*dl);
+        ctx.strokeStyle=isS?`rgba(200,100,10,${.15+fire*.2})`:'rgba(37,99,235,.06)';ctx.lineWidth=isS?2:1;ctx.stroke();});
+      if(isS){ctx.beginPath();ctx.arc(n.x,n.y,n.r*3.5,0,Math.PI*2);ctx.fillStyle=`rgba(200,100,10,${fire*.1})`;ctx.fill();}
+      ctx.beginPath();ctx.arc(n.x,n.y,n.r*(isS?1+fire*.5:1),0,Math.PI*2);
+      ctx.fillStyle=isS?`rgba(200,100,10,${.4+fire*.6})`:'rgba(37,99,235,.2)';ctx.fill();
+      if(n.r>7){ctx.beginPath();ctx.arc(n.x,n.y,n.r*.3,0,Math.PI*2);ctx.fillStyle=isS?`rgba(180,90,10,${.4+fire*.3})`:'rgba(30,60,180,.12)';ctx.fill();}
+    });
+
+    ctx.font='600 13px DM Sans';ctx.textAlign='left';
+    ctx.fillStyle='rgba(37,99,235,.4)';ctx.beginPath();ctx.arc(W-230,50,8,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#64748b';ctx.fillText('Normal neuron',W-215,54);
+    ctx.fillStyle='rgba(200,100,10,.7)';ctx.beginPath();ctx.arc(W-230,78,8,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#d97706';ctx.fillText('Seized neuron',W-215,82);
+
+    const pY=H-100,pH=70;
+    ctx.fillStyle='rgba(248,250,252,.9)';ctx.beginPath();ctx.roundRect(60,pY-pH/2-15,W-120,pH+30,12);ctx.fill();
+    ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;ctx.strokeRect(60,pY-pH/2-15,W-120,pH+30);
+    ctx.font='bold 14px JetBrains Mono';ctx.fillStyle='#64748b';ctx.textAlign='left';
+    ctx.fillText('Intracellular Recording \u2014 Paroxysmal Depolarising Shift',80,pY-pH/2-1);
+    ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(80,pY);ctx.lineTo(W-80,pY);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(120,pY);ctx.strokeStyle='#d97706';ctx.lineWidth=3;
+    for(let x=120;x<W-80;x+=2){
+      const phase=(x-120)/(W-200);let v;
+      if(phase<.12)v=0;else if(phase<.65){v=-40+Math.sin((x-200)*.18+t*9)*15;}
+      else if(phase<.82){v=20*Math.sin((phase-.65)/.17*Math.PI);}else v=0;
+      ctx.lineTo(x,pY+v);
+    }
+    ctx.stroke();
+    ctx.font='bold 13px DM Sans';ctx.textAlign='center';ctx.fillStyle='#d97706';
+    ctx.fillText('\u2190 PDS (prolonged depolarisation + burst firing) \u2192',W/2-50,pY-42);
+    ctx.fillStyle='#2563eb';ctx.fillText('AHP',W-200,pY+35);
+    ctx.font='500 11px DM Sans';ctx.fillStyle='#64748b';ctx.fillText('(afterhyperpolarisation \u2014 inhibition)',W-200,pY+50);
+    pdsAnim=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ══════ SCENE 5: EPILEPTOGENESIS ══════
+let epPhase=0,epAnim;
+function setEpPhase(p){
+  epPhase=p;
+  const labels=[
+    'Step 1: Brain Insult — Excitability Increases, Inhibition Decreases',
+    'Step 2: Abnormal Neurons Recruit Normal Neighbours',
+    'Step 3: Epileptic Network — Spontaneous Seizures Begin',
+    'Step 4: Repeated Seizures Damage Cortex Further'
+  ];
+  document.getElementById('epPhaseLabel').textContent=labels[p];
+}
+
+function initEpCanvas(){
+  if(epAnim) cancelAnimationFrame(epAnim);
+  const c=document.getElementById('epCanvas'),ctx=c.getContext('2d'),W=c.width,H=c.height;
+  let t=0;
+  const nodes=Array.from({length:90},(_,i)=>{
+    const isInhib=i%5===0;
+    return {
+      x:140+Math.random()*(W-280),
+      y:80+Math.random()*(H-230),
+      excitability:.15+Math.random()*.4,
+      phase:Math.random()*Math.PI*2,
+      type:isInhib?'in':'ex',
+      damaged:false
+    };
+  });
+  nodes.filter(n=>n.x<400).slice(0,12).forEach(n=>{n.damaged=true;});
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);t+=.016;
+
+    // ── Progress bar at bottom ──
+    const barY=H-50,barX=100,barW=W-200;
+    ctx.fillStyle='#f1f5f9';ctx.beginPath();ctx.roundRect(barX,barY-8,barW,16,8);ctx.fill();
+    ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;ctx.stroke();
+    const stepCols=['#f59e0b','#d97706','#d97706','#d97706'];
+    const stepLabels=['Insult','Network','Seizures','Damage'];
+    if(epPhase>0){
+      ctx.fillStyle=stepCols[epPhase]+'25';ctx.beginPath();ctx.roundRect(barX,barY-8,(epPhase/3)*barW,16,8);ctx.fill();
+    }
+    stepLabels.forEach((lab,i)=>{
+      const px=barX+(i/3)*barW;
+      ctx.beginPath();ctx.arc(px,barY,9,0,Math.PI*2);ctx.fillStyle=i<=epPhase?stepCols[i]:'#cbd5e1';ctx.fill();
+      ctx.strokeStyle='#fff';ctx.lineWidth=2;ctx.stroke();
+      ctx.font='600 12px DM Sans';ctx.textAlign='center';ctx.fillStyle=i<=epPhase?stepCols[i]:'#94a3b8';ctx.fillText(lab,px,barY+24);
+    });
+    ctx.font='500 11px DM Sans';ctx.fillStyle='#94a3b8';ctx.textAlign='center';ctx.fillText('TIME \u2192',barX+barW/2,barY-16);
+
+    const gp=t*6;
+
+    // Step 0: Insult — damaged neurons glow amber, inhibitory neurons fading
+    if(epPhase===0){
+      ctx.lineWidth=1.2;
+      for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
+        const d=Math.hypot(nodes[i].x-nodes[j].x,nodes[i].y-nodes[j].y);
+        if(d<85&&Math.sin(i*j*.1)<-0.5){
+          const anyDamaged=nodes[i].damaged||nodes[j].damaged;
+          ctx.strokeStyle=anyDamaged?`rgba(245,158,11,${.04+.04*Math.sin(gp+i)})`:'rgba(148,163,184,.05)';
+          ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.stroke();
+        }
+      }
+      nodes.forEach(n=>{
+        const fire=.5+.5*Math.sin(n.phase+gp*(n.damaged?1.8:.3)*n.excitability);
+        const isEx=n.type==='ex';
+        if(n.damaged){
+          const r=5+fire*6;
+          ctx.beginPath();ctx.arc(n.x,n.y,r*2.2,0,Math.PI*2);ctx.fillStyle=`rgba(245,158,11,${fire*.1})`;ctx.fill();
+          ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);ctx.fillStyle=`rgba(217,130,20,${.35+fire*.5})`;ctx.fill();
+        } else if(!isEx){
+          const fade=.08+fire*.08;
+          const r=3+fire*1.5;
+          ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);ctx.fillStyle=`rgba(37,99,235,${fade})`;ctx.fill();
+        } else {
+          const r=4+fire*2.5;
+          ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);ctx.fillStyle=`rgba(217,130,20,${.12+fire*.15})`;ctx.fill();
+        }
+      });
+      ctx.font='bold 15px DM Sans';ctx.textAlign='left';
+      ctx.fillStyle='#f59e0b';ctx.fillText('\u2726  Brain insult damages neurons — excitability increases',70,40);
+      ctx.fillStyle='#2563eb';ctx.font='500 14px DM Sans';ctx.fillText('\u2193  Inhibitory (blue) neurons fading — inhibition decreasing',70,62);
+    }
+
+    // Step 1: Network formation — abnormal neurons recruit neighbours
+    else if(epPhase===1){
+      const recruitThresh=.32;
+      ctx.lineWidth=1.8;
+      for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
+        const d=Math.hypot(nodes[i].x-nodes[j].x,nodes[i].y-nodes[j].y);
+        const bothAbnormal=(nodes[i].damaged||nodes[i].excitability>recruitThresh)&&(nodes[j].damaged||nodes[j].excitability>recruitThresh);
+        if(d<110&&bothAbnormal){
+          const fire=.5+.5*Math.sin(gp+i);
+          ctx.strokeStyle=`rgba(200,100,10,${.04+fire*.08})`;ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.stroke();
+        } else if(d<80&&Math.sin(i*j*.1)<-0.6){
+          ctx.strokeStyle='rgba(148,163,184,.04)';ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.stroke();
+        }
+      }
+      nodes.forEach((n,i)=>{
+        const fire=.5+.5*Math.sin(n.phase+gp*1.5*n.excitability);
+        const isEx=n.type==='ex';
+        const isRecruited=n.damaged||n.excitability>recruitThresh;
+        if(isRecruited&&isEx){
+          const r=5+fire*5;
+          ctx.beginPath();ctx.arc(n.x,n.y,r*2,0,Math.PI*2);ctx.fillStyle=`rgba(200,100,10,${fire*.08})`;ctx.fill();
+          ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);ctx.fillStyle=`rgba(200,100,10,${.3+fire*.5})`;ctx.fill();
+          if(fire>.75&&i%3===0){
+            nodes.filter(nn=>!nn.damaged&&nn.excitability<=recruitThresh&&Math.hypot(nn.x-n.x,nn.y-n.y)<120).slice(0,2).forEach(nn=>{
+              ctx.strokeStyle=`rgba(217,130,20,${.15+fire*.15})`;ctx.lineWidth=2;ctx.setLineDash([4,4]);
+              ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(nn.x,nn.y);ctx.stroke();ctx.setLineDash([]);
+            });
+          }
+        } else if(!isEx){
+          const r=2.5+fire*1;
+          ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);ctx.fillStyle=`rgba(37,99,235,${.06+fire*.06})`;ctx.fill();
+        } else {
+          const r=3.5+fire*2;
+          ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);ctx.fillStyle=`rgba(217,130,20,${.1+fire*.12})`;ctx.fill();
+        }
+      });
+      ctx.font='bold 15px DM Sans';ctx.textAlign='left';ctx.fillStyle='#d97706';
+      ctx.fillText('\u27F6  Abnormal neurons recruit normal neighbours \u2192 epileptic network forming',70,40);
+      ctx.font='500 14px DM Sans';ctx.fillStyle='#2563eb';
+      ctx.fillText('\u2193  Inhibitory neurons further weakened',70,62);
+    }
+
+    // Step 2: Spontaneous seizures — large network fires synchronously
+    else if(epPhase===2){
+      const syncLevel=.7;
+      ctx.lineWidth=2.5;
+      for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
+        const d=Math.hypot(nodes[i].x-nodes[j].x,nodes[i].y-nodes[j].y);
+        if(d<120){const fire=.5+.5*Math.sin(gp+i);
+          ctx.strokeStyle=`rgba(200,100,10,${.05+fire*.12})`;ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.stroke();
+        }
+      }
+      nodes.forEach(n=>{
+        const lp=n.phase*(1-syncLevel)+gp*syncLevel;
+        const fire=.5+.5*Math.sin(lp*n.excitability*3);
+        const r=5+fire*7;
+        ctx.beginPath();ctx.arc(n.x,n.y,r*2.5,0,Math.PI*2);ctx.fillStyle=`rgba(200,100,10,${fire*.1})`;ctx.fill();
+        ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);ctx.fillStyle=`rgba(200,100,10,${.3+fire*.65})`;ctx.fill();
+      });
+      ctx.font='bold 15px DM Sans';ctx.textAlign='left';ctx.fillStyle='#d97706';
+      ctx.fillText('\u26A1  Network large enough \u2192 spontaneous seizures \u2192 epilepsy',70,40);
+      ctx.font='500 14px DM Sans';ctx.fillStyle='#64748b';
+      ctx.fillText('Hypersynchronous orange activity overwhelms remaining inhibition',70,62);
+    }
+
+    // Step 3: Repeated seizures damage cortex further
+    else if(epPhase===3){
+      const syncLevel=.85;
+      ctx.lineWidth=2.8;
+      for(let i=0;i<nodes.length;i++)for(let j=i+1;j<nodes.length;j++){
+        const d=Math.hypot(nodes[i].x-nodes[j].x,nodes[i].y-nodes[j].y);
+        if(d<130){const fire=.5+.5*Math.sin(gp*1.3+i);
+          ctx.strokeStyle=`rgba(200,100,10,${.06+fire*.16})`;ctx.beginPath();ctx.moveTo(nodes[i].x,nodes[i].y);ctx.lineTo(nodes[j].x,nodes[j].y);ctx.stroke();
+        }
+      }
+      const dmgMarkers=[[250,180],[400,280],[350,160],[500,200],[300,320],[450,350],[550,300],[200,260]];
+      dmgMarkers.forEach(([mx,my])=>{
+        const pulse=.5+.5*Math.sin(t*3+mx*.01);
+        ctx.strokeStyle=`rgba(120,50,0,${.2+pulse*.25})`;ctx.lineWidth=2.5;
+        ctx.beginPath();ctx.moveTo(mx-6,my-6);ctx.lineTo(mx+6,my+6);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(mx+6,my-6);ctx.lineTo(mx-6,my+6);ctx.stroke();
+      });
+      nodes.forEach(n=>{
+        const lp=n.phase*(1-syncLevel)+gp*1.2*syncLevel;
+        const fire=.5+.5*Math.sin(lp*n.excitability*4);
+        const r=5+fire*8;
+        ctx.beginPath();ctx.arc(n.x,n.y,r*2.5,0,Math.PI*2);ctx.fillStyle=`rgba(200,100,10,${fire*.12})`;ctx.fill();
+        ctx.beginPath();ctx.arc(n.x,n.y,r,0,Math.PI*2);ctx.fillStyle=`rgba(200,100,10,${.35+fire*.6})`;ctx.fill();
+      });
+      ctx.font='bold 15px DM Sans';ctx.textAlign='left';ctx.fillStyle='#d97706';
+      ctx.fillText('\uD83D\uDD04  Repeated seizures damage the cortex further',70,40);
+      ctx.font='500 14px DM Sans';ctx.fillStyle='#64748b';
+      ctx.fillText('\u2718  marks = cortical damage sites \u2014 seizure susceptibility increases',70,62);
+    }
+
+    epAnim=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// ══════ SCENE 6: GENETICS ══════
+let genAnim;
+function initGenCanvas(){
+  if(genAnim) cancelAnimationFrame(genAnim);
+  const c=document.getElementById('genCanvas'),ctx=c.getContext('2d'),W=c.width,H=c.height;
+  let t=0;
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);t+=.016;
+    const MID=W/2;
+
+    ctx.font='bold 20px DM Sans';ctx.textAlign='center';ctx.fillStyle='#f59e0b';ctx.fillText('ACQUIRED EPILEPSY',MID/2,48);
+    ctx.font='500 14px DM Sans';ctx.fillStyle='#64748b';ctx.fillText('e.g. head trauma, stroke',MID/2,72);
+    const bx=MID/2,by=220,brx=140,bry=110;
+    ctx.beginPath();ctx.ellipse(bx,by,brx,bry,0,0,Math.PI*2);
+    const bg=ctx.createRadialGradient(bx-20,by-20,30,bx,by,brx);bg.addColorStop(0,'#f0f4ff');bg.addColorStop(1,'#e8eeff');
+    ctx.fillStyle=bg;ctx.fill();ctx.strokeStyle='#b0bec5';ctx.lineWidth=2;ctx.stroke();
+    for(let i=0;i<5;i++){ctx.beginPath();ctx.moveTo(bx-90+i*40,by-70+Math.sin(i)*15);
+      ctx.quadraticCurveTo(bx-80+i*40,by-20+Math.cos(i)*15,bx-90+i*40,by+40);
+      ctx.strokeStyle='rgba(170,185,200,.4)';ctx.lineWidth=1.5;ctx.stroke();}
+    const pulse=.5+.5*Math.sin(t*3);
+    ctx.beginPath();ctx.ellipse(bx+50,by-20,30+pulse*8,22+pulse*5,-.3,0,Math.PI*2);
+    ctx.fillStyle=`rgba(245,158,11,${.2+pulse*.25})`;ctx.fill();ctx.strokeStyle='#f59e0b';ctx.lineWidth=2;ctx.stroke();
+    ctx.font='bold 13px DM Sans';ctx.fillStyle='#f59e0b';ctx.textAlign='center';ctx.fillText('LESION',bx+50,by-16);
+    ctx.textAlign='left';ctx.font='600 15px DM Sans';ctx.fillStyle='#334155';
+    ctx.fillText('\u2716  NOT inherited',bx-80,370);
+    ctx.font='500 14px DM Sans';ctx.fillStyle='#64748b';
+    ctx.fillText('Caused by identifiable structural',bx-80,398);
+    ctx.fillText('or metabolic insult',bx-80,422);
+
+    ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1.5;ctx.setLineDash([8,5]);
+    ctx.beginPath();ctx.moveTo(MID,30);ctx.lineTo(MID,H-30);ctx.stroke();ctx.setLineDash([]);
+    ctx.font='bold 14px JetBrains Mono';ctx.fillStyle='#94a3b8';ctx.textAlign='center';ctx.fillText('vs',MID,H/2);
+
+    const rx=MID+MID/2;
+    ctx.font='bold 20px DM Sans';ctx.textAlign='center';ctx.fillStyle='#7c3aed';ctx.fillText('INHERITED (GENETIC) EPILEPSY',rx,48);
+    ctx.font='500 14px DM Sans';ctx.fillStyle='#64748b';ctx.fillText('Multiple abnormal genes (polygenic)',rx,72);
+    for(let i=0;i<50;i++){
+      const y=100+i*5.5,amp=55,x1=rx+Math.sin(y*.045+t*2)*amp,x2=rx-Math.sin(y*.045+t*2)*amp;
+      ctx.beginPath();ctx.arc(x1,y,5,0,Math.PI*2);ctx.fillStyle=`rgba(124,58,237,${.35+.35*Math.sin(i*.3+t*2)})`;ctx.fill();
+      ctx.beginPath();ctx.arc(x2,y,5,0,Math.PI*2);ctx.fillStyle=`rgba(37,99,235,${.35+.35*Math.cos(i*.3+t*2)})`;ctx.fill();
+      if(i%3===0){ctx.beginPath();ctx.moveTo(x1,y);ctx.lineTo(x2,y);ctx.strokeStyle='rgba(148,163,184,.25)';ctx.lineWidth=2;ctx.stroke();
+        if(i===15||i===30||i===42){const mx=(x1+x2)/2;ctx.beginPath();ctx.arc(mx,y,10,0,Math.PI*2);
+          ctx.fillStyle=`rgba(200,100,10,${.12+.18*Math.sin(t*4)})`;ctx.fill();ctx.strokeStyle='#d97706';ctx.lineWidth=2;ctx.stroke();
+          ctx.font='bold 8px JetBrains Mono';ctx.fillStyle='#d97706';ctx.textAlign='center';ctx.fillText('MUT',mx,y+3);}}
+    }
+    ctx.textAlign='left';ctx.font='500 14px DM Sans';ctx.fillStyle='#334155';
+    const gInfo=['More common in generalised-onset seizures','Develops during childhood','Complex inheritance \u2014 multiple abnormal genes','Children & siblings unlikely to develop epilepsy'];
+    gInfo.forEach((g,i)=>{ctx.fillText('\u2022  '+g,rx-140,400+i*28);});
+    ctx.font='600 13px DM Sans';ctx.textAlign='center';ctx.fillStyle='#2563eb';
+    ctx.fillText('\u2714  Most patients can be reassured about family risk',rx,H-30);
+    genAnim=requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+try{initBrainCanvas();}catch(e){console.error('init error',e);}
+</script>
+</body>
+</html>
